@@ -17,16 +17,33 @@ To set up PortfolioTracker, follow these steps:
 
 1. Clone the repository:
 
-   git clone [repository URL]
+```
+git clone https://github.com/pietrosperoni/PortfolioTracker.git
+```
 
 2. Navigate to the project directory:
 
+```
 cd PortfolioTracker
+```
 
 3. Install required dependencies (ensure you have Conda installed):
 
-conda create --name portfolio_env --file requirements.txt
-conda activate portfolio_env
+```
+conda create --name portfoliotracker_env python=3.11
+conda activate portfoliotracker_env
+conda env update --file environment.yml
+```
+
+After installing new libraries or making significant changes, export your environment:
+
+```
+conda env export > environment.yml
+```
+
+Remember to activate the portfoliotracker_env environment every time you work on this project.
+Keep the environment.yml file updated and commit changes to your Git repository.
+
 
 ## Usage
 Describe how users can use the application, including any commands or scripts they need to run.
