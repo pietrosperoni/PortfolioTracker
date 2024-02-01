@@ -453,3 +453,22 @@ if __name__ == "__main__":
     create_tables()
 
 
+def fetch_asset_overview(db_file):
+    """ Fetch the quantity of each asset owned at each location """
+    conn = create_connection(db_file)
+    asset_overview = []
+    if conn is not None:
+        try:
+            c = conn.cursor()
+            c.execute('''SELECT a.name, l.name, SUM(t.quantity) as quantity_owned
+                         FROM transactions t
+                         JOIN asset_markets am ON t.asset_market_id = am.id
+                         JOIN assets a ON am.asset_id = a.id
+                         JOIN locations l ON am.location_id = l.id
+                         GROUP BY a.id, l.id''')
+            asset_overview = c.fetchall()
+        except sqlite3.Error as e:
+            print(e)
+        finally:
+            conn.close()
+    return asset_overview

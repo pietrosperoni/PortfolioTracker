@@ -6,6 +6,48 @@ import datetime
 
 import db
 
+class AssetOverviewPage(tk.Frame):
+    def __init__(self, parent, controller, db_file):
+        tk.Frame.__init__(self, parent)
+        self.db_file = db_file
+        label = tk.Label(self, text="Asset Overview")
+        label.pack(pady=10, padx=10)
+
+        # Set up the Treeview
+        columns = ("Asset Name", "Location", "Quantity Owned")
+        self.tree = ttk.Treeview(self, columns=columns, show="headings", height=25)
+        for col in columns:
+            self.tree.heading(col, text=col)
+            self.tree.column(col, width=100)
+        self.tree.pack(side="left", fill="both", expand=True)
+
+        # Scrollbar for the Treeview
+        scrollbar = ttk.Scrollbar(self, command=self.tree.yview)
+        scrollbar.pack(side="right", fill="y")
+        self.tree.configure(yscrollcommand=scrollbar.set)
+
+        self.populate_assets()
+
+    def populate_assets(self):
+        """ Fetch data from the database and insert into the treeview """
+        # Clear the treeview
+        for i in self.tree.get_children():
+            self.tree.delete(i)
+
+        # Fetch data from the database
+        asset_data = db.fetch_asset_overview(self.db_file)
+        for asset in asset_data:
+            self.tree.insert("", "end", values=asset)
+
+        # Navigation buttons
+        transactions_button = tk.Button(self, text="Transactions",
+                                        command=lambda: controller.show_frame(TransactionsPage))
+        transactions_button.pack()
+
+        net_value_button = tk.Button(self, text="NetValue",
+                                     command=lambda: controller.show_frame(NetValuePage))
+        net_value_button.pack()
+
 class PortfolioTrackerApp(tk.Tk):
     def __init__(self, db_file,*args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -23,6 +65,11 @@ class PortfolioTrackerApp(tk.Tk):
             frame = F(container, self, self.db_file)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
+
+        # Add a button to navigate to the Asset Overview page
+        asset_overview_button = tk.Button(self, text="Asset Overview",
+                                          command=lambda: self.show_frame(AssetOverviewPage))
+        asset_overview_button.pack()
 
         self.show_frame(TransactionsPage)
 
