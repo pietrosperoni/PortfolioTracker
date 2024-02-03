@@ -61,7 +61,7 @@ class PortfolioTrackerApp(tk.Tk):
         # A dictionary to hold the pages
         self.frames = {}
 
-        for F in (TransactionsPage, NetValuePage):
+        for F in (TransactionsPage, NetValuePage, AssetOverviewPage):
             frame = F(container, self, self.db_file)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
