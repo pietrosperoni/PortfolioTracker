@@ -9,6 +9,7 @@ import db
 class AssetOverviewPage(tk.Frame):
     def __init__(self, parent, controller, db_file):
         tk.Frame.__init__(self, parent)
+        self.controller = controller
         self.db_file = db_file
         label = tk.Label(self, text="Asset Overview")
         label.pack(pady=10, padx=10)
@@ -41,11 +42,11 @@ class AssetOverviewPage(tk.Frame):
 
         # Navigation buttons
         transactions_button = tk.Button(self, text="Transactions",
-                                        command=lambda: controller.show_frame(TransactionsPage))
+                                        command=lambda: self.controller.show_frame(TransactionsPage))
         transactions_button.pack()
 
         net_value_button = tk.Button(self, text="NetValue",
-                                     command=lambda: controller.show_frame(NetValuePage))
+                                     command=lambda: self.controller.show_frame(NetValuePage))
         net_value_button.pack()
 
 class PortfolioTrackerApp(tk.Tk):
